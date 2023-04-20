@@ -1,0 +1,9 @@
+{
+  "$schema": "boilerplate.schema.json",
+  "boilerplate": "@mufan/code-boilerplates/general",
+  "options": {
+    "name": "super-heavy-launching",
+    "license": "MIT",
+    "author": "vilicvane"
+  }
+}
