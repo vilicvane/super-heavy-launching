@@ -591,6 +591,10 @@
           name: 't-plus-239',
           after: 'flame-out-of-control',
         },
+        {
+          redirect: 'https://github.com/vilic/super-heavy-launching',
+          after: 'flame-explode',
+        },
       ];
 
       body.addEventListener('animationend', event => {
@@ -598,7 +602,7 @@
           return;
         }
 
-        const [{name, after}] = pendingSequence;
+        const [{name, redirect, after}] = pendingSequence;
 
         const {element, animation} =
           typeof after === 'string'
@@ -613,6 +617,11 @@
           typeof element === 'string' &&
           !event.target.classList.contains(element)
         ) {
+          return;
+        }
+
+        if (typeof redirect === 'string') {
+          location.href = redirect;
           return;
         }
 
