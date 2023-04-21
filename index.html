@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Super Heavy Launching Animation</title>
+    <style>
+      :root {
+        --engine-flash-color: #fca139;
+        --engine-flash-color-fade: #fca13966;
+      }
+
+      html {
+        height: 100%;
+      }
+
+      body {
+        height: 100%;
+        margin: 0;
+
+        overflow: hidden;
+      }
+
+      @keyframes sky {
+        0% {
+          background-color: #95a8b8;
+        }
+
+        20% {
+          background-color: #0449a7;
+        }
+
+        40% {
+          background-color: #1462c2;
+        }
+
+        60% {
+          background-color: #8fb7c9;
+        }
+
+        100% {
+          background-color: white;
+        }
+      }
+
+      .sky {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+
+        background-color: #95a8b8;
+      }
+
+      .starship,
+      .flame {
+        --size: 100px;
+
+        position: absolute;
+
+        left: 50%;
+        top: 50%;
+
+        width: var(--size);
+        height: var(--size);
+
+        margin: calc(-1 * var(--size) / 2);
+      }
+
+      @keyframes starship-setup {
+        from {
+          opacity: 1;
+        }
+
+        to {
+          opacity: 0;
+        }
+      }
+
+      @keyframes starship-rotate {
+        from {
+          transform: rotate(0deg);
+        }
+
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      .starship {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        opacity: 0;
+      }
+
+      @keyframes super-heavy-explode {
+        from {
+          opacity: 1;
+        }
+
+        to {
+          opacity: 0;
+        }
+      }
+
+      .super-heavy {
+        position: relative;
+        width: 100px;
+        height: 100px;
+      }
+
+      @keyframes flame-ignition {
+        0% {
+          opacity: 0;
+          transform: scale(1);
+        }
+
+        20% {
+          opacity: 0.15;
+          transform: scale(1.2);
+        }
+
+        25% {
+          opacity: 0.1;
+          transform: scale(1.15);
+        }
+
+        100% {
+          opacity: 0.2;
+          transform: scale(1.5);
+        }
+      }
+
+      @keyframes flame {
+        from {
+          transform: scale(1.5);
+        }
+
+        to {
+          transform: scale(1.4);
+        }
+      }
+
+      @keyframes flame-out-of-control {
+        0% {
+          transform: scale(1.4);
+        }
+
+        20% {
+          transform: scale(1.5) rotate(60deg) translateX(2%);
+        }
+
+        40% {
+          transform: scale(1.6) rotate(160deg) translateX(3%);
+        }
+
+        60% {
+          transform: scale(2) rotate(230deg) translateX(5%);
+        }
+
+        80% {
+          transform: scale(1.7) rotate(300deg) translateX(6%);
+        }
+
+        100% {
+          transform: scale(1.2);
+        }
+      }
+
+      @keyframes flame-explode {
+        0% {
+          transform: scale(1.2);
+          opacity: 0.2;
+        }
+
+        5% {
+          transform: scale(2);
+          opacity: 0.8;
+        }
+
+        100% {
+          transform: scale(10);
+          opacity: 0;
+        }
+      }
+
+      .flame {
+        background-color: white;
+        border-radius: 50%;
+
+        opacity: 0;
+      }
+
+      .engine-group {
+        --engine-install-delay-step: 0.3s;
+        --engine-install-delay: calc(
+          var(--engine-install-delay-step) * (2 - var(--engine-group-index))
+        );
+      }
+
+      .engine-group-1 {
+        --engine-group-index: 0;
+      }
+
+      .engine-group-2 {
+        --engine-group-index: 1;
+      }
+
+      .engine-group-3 {
+        --engine-group-index: 2;
+      }
+
+      @keyframes engine-install {
+        0% {
+          opacity: 0;
+        }
+
+        25% {
+          opacity: 0.5;
+        }
+
+        50% {
+          opacity: 0;
+        }
+
+        100% {
+          opacity: 1;
+        }
+      }
+
+      @keyframes engine-ignition {
+        0% {
+          background-color: transparent;
+        }
+
+        20% {
+          background-color: rgba(255, 255, 255, 0.8);
+        }
+
+        25% {
+          background-color: rgba(255, 255, 255, 0.5);
+        }
+
+        100% {
+          background-color: white;
+        }
+      }
+
+      @keyframes engine-ignition-down {
+        0% {
+          background-color: transparent;
+        }
+
+        20% {
+          background-color: var(--engine-flash-color);
+          border-color: var(--engine-flash-color);
+        }
+
+        25% {
+          background-color: var(--engine-flash-color-fade);
+          border-color: var(--engine-flash-color-fade);
+        }
+
+        30% {
+          background-color: var(--engine-flash-color);
+          border-color: var(--engine-flash-color);
+        }
+
+        100% {
+          background-color: transparent;
+        }
+      }
+
+      @keyframes engine-flash-down {
+        0% {
+          background-color: white;
+        }
+
+        20% {
+          background-color: var(--engine-flash-color);
+          border-color: var(--engine-flash-color);
+        }
+
+        25% {
+          background-color: var(--engine-flash-color-fade);
+          border-color: var(--engine-flash-color-fade);
+        }
+
+        30% {
+          background-color: var(--engine-flash-color);
+          border-color: var(--engine-flash-color);
+        }
+
+        100% {
+          background-color: transparent;
+        }
+      }
+
+      .engine {
+        --size: 9px;
+
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        margin: calc(-1 * var(--size) / 2);
+
+        width: var(--size);
+        height: var(--size);
+
+        border-radius: 50%;
+        border: 1px solid rgba(255, 255, 255, 0.5);
+      }
+
+      .engine-group-1 .engine {
+        transform: rotate(calc(2deg + 18deg * var(--engine-index)))
+          translateX(40px);
+      }
+
+      .engine-group-2 .engine {
+        transform: rotate(calc(28deg + 36deg * var(--engine-index)))
+          translateX(23px);
+      }
+
+      .engine-group-3 .engine {
+        transform: rotate(calc(30deg + 120deg * var(--engine-index)))
+          translateX(8px);
+      }
+
+      .setup .starship {
+        opacity: 1;
+        animation: starship-setup 0.4s linear 1s forwards alternate 4;
+      }
+
+      .setup .engine-group {
+        opacity: 0;
+        animation: engine-install 0.2s linear var(--engine-install-delay)
+          forwards;
+      }
+
+      .t-minus-3 .flame {
+        opacity: 0;
+        animation: flame-ignition 2s ease-in-out 1s forwards;
+      }
+
+      .t-minus-3 .starship {
+        animation: starship-rotate 10s ease-in 1s;
+      }
+
+      .t-minus-3 .engine {
+        background-color: transparent;
+        animation: engine-ignition 1s ease-in-out
+          calc(var(--engine-ignite-delay, 0s) + 1s) forwards;
+      }
+
+      .t-minus-3 .engine-15,
+      .t-minus-3 .engine-16,
+      .t-minus-3 .engine-31 {
+        animation: engine-ignition-down 1s ease-in-out
+          calc(var(--engine-ignite-delay, 0s) + 1s) forwards;
+      }
+
+      .t-plus-0 .sky {
+        animation: sky 8s linear forwards;
+        transition: opacity 0.5s linear;
+      }
+
+      .t-plus-0 .flame {
+        opacity: 0.2;
+        animation: flame 0.5s ease-in-out forwards alternate 5;
+      }
+
+      .t-plus-39 .engine-7,
+      .t-plus-39 .engine-8 {
+        animation: engine-flash-down 1.5s ease-in-out 0.2s forwards;
+      }
+
+      .t-plus-61 .engine-11 {
+        animation: engine-flash-down 1.5s ease-in-out 0.2s forwards;
+      }
+
+      .t-plus-170 .flame {
+        animation: flame-out-of-control 2s ease-in-out forwards;
+      }
+
+      .t-plus-239 .sky {
+        opacity: 0;
+      }
+
+      .t-plus-239 .flame {
+        animation: flame-explode 0.5s ease-out forwards;
+      }
+
+      .t-plus-239 .super-heavy {
+        animation: super-heavy-explode 0.2s ease-out forwards;
+      }
+    </style>
+    <style>
+      .engine-1 {
+        --engine-index: 0;
+        --engine-ignite-delay: 0.1s;
+      }
+      .engine-2 {
+        --engine-index: 1;
+      }
+      .engine-3 {
+        --engine-index: 2;
+        --engine-ignite-delay: 0.1s;
+      }
+      .engine-4 {
+        --engine-index: 3;
+      }
+      .engine-5 {
+        --engine-index: 4;
+      }
+      .engine-6 {
+        --engine-index: 5;
+        --engine-ignite-delay: 0.2s;
+      }
+      .engine-7 {
+        --engine-index: 6;
+      }
+      .engine-8 {
+        --engine-index: 7;
+        --engine-ignite-delay: 0.1s;
+      }
+      .engine-9 {
+        --engine-index: 8;
+      }
+      .engine-10 {
+        --engine-index: 9;
+      }
+      .engine-11 {
+        --engine-index: 10;
+        --engine-ignite-delay: 0.1s;
+      }
+      .engine-12 {
+        --engine-index: 11;
+      }
+      .engine-13 {
+        --engine-index: 12;
+      }
+      .engine-14 {
+        --engine-index: 13;
+      }
+      .engine-15 {
+        --engine-index: 14;
+      }
+      .engine-16 {
+        --engine-index: 15;
+      }
+      .engine-17 {
+        --engine-index: 16;
+        --engine-ignite-delay: 0.1s;
+      }
+      .engine-18 {
+        --engine-index: 17;
+        --engine-ignite-delay: 0.2s;
+      }
+      .engine-19 {
+        --engine-index: 18;
+      }
+      .engine-20 {
+        --engine-index: 19;
+        --engine-ignite-delay: 0.1s;
+      }
+      .engine-21 {
+        --engine-index: 0;
+        --engine-ignite-delay: 0.1s;
+      }
+      .engine-22 {
+        --engine-index: 1;
+      }
+      .engine-23 {
+        --engine-index: 2;
+      }
+      .engine-24 {
+        --engine-index: 3;
+        --engine-ignite-delay: 0.1s;
+      }
+      .engine-25 {
+        --engine-index: 4;
+      }
+      .engine-26 {
+        --engine-index: 5;
+      }
+      .engine-27 {
+        --engine-index: 6;
+        --engine-ignite-delay: 0.1s;
+      }
+      .engine-28 {
+        --engine-index: 7;
+      }
+      .engine-29 {
+        --engine-index: 8;
+        --engine-ignite-delay: 0.2s;
+      }
+      .engine-30 {
+        --engine-index: 9;
+        --engine-ignite-delay: 0.1s;
+      }
+      .engine-31 {
+        --engine-index: 0;
+      }
+      .engine-32 {
+        --engine-index: 1;
+        --engine-ignite-delay: 0.1s;
+      }
+      .engine-33 {
+        --engine-index: 2;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="sky"></div>
+    <div class="starship">
+      <div class="super-heavy">
+        <div class="engine-group engine-group-1">
+          <div class="engine engine-1"></div>
+          <div class="engine engine-2"></div>
+          <div class="engine engine-3"></div>
+          <div class="engine engine-4"></div>
+          <div class="engine engine-5"></div>
+          <div class="engine engine-6"></div>
+          <div class="engine engine-7"></div>
+          <div class="engine engine-8"></div>
+          <div class="engine engine-9"></div>
+          <div class="engine engine-10"></div>
+          <div class="engine engine-11"></div>
+          <div class="engine engine-12"></div>
+          <div class="engine engine-13"></div>
+          <div class="engine engine-14"></div>
+          <div class="engine engine-15"></div>
+          <div class="engine engine-16"></div>
+          <div class="engine engine-17"></div>
+          <div class="engine engine-18"></div>
+          <div class="engine engine-19"></div>
+          <div class="engine engine-20"></div>
+        </div>
+        <div class="engine-group engine-group-2">
+          <div class="engine engine-21"></div>
+          <div class="engine engine-22"></div>
+          <div class="engine engine-23"></div>
+          <div class="engine engine-24"></div>
+          <div class="engine engine-25"></div>
+          <div class="engine engine-26"></div>
+          <div class="engine engine-27"></div>
+          <div class="engine engine-28"></div>
+          <div class="engine engine-29"></div>
+          <div class="engine engine-30"></div>
+        </div>
+        <div class="engine-group engine-group-3">
+          <div class="engine engine-31"></div>
+          <div class="engine engine-32"></div>
+          <div class="engine engine-33"></div>
+        </div>
+      </div>
+    </div>
+    <div class="flame"></div>
+    <script>
+      const body = document.body;
+
+      setTimeout(() => {
+        body.classList.add('setup');
+      }, 1000);
+
+      const pendingSequence = [
+        {
+          name: 't-minus-3',
+          after: 'starship-setup',
+        },
+        {
+          name: ['t-plus-0', 't-plus-39'],
+          after: 'flame-ignition',
+        },
+        {
+          name: 't-plus-61',
+          after: {
+            animation: 'engine-flash-down',
+            element: 'engine-7',
+          },
+        },
+        {
+          name: 't-plus-170',
+          after: 'flame',
+        },
+        {
+          name: 't-plus-239',
+          after: 'flame-out-of-control',
+        },
+      ];
+
+      body.addEventListener('animationend', event => {
+        if (pendingSequence.length === 0) {
+          return;
+        }
+
+        const [{name, after}] = pendingSequence;
+
+        const {element, animation} =
+          typeof after === 'string'
+            ? {animation: after, element: undefined}
+            : after;
+
+        if (event.animationName !== animation) {
+          return;
+        }
+
+        if (
+          typeof element === 'string' &&
+          !event.target.classList.contains(element)
+        ) {
+          return;
+        }
+
+        body.classList.add(...(Array.isArray(name) ? name : [name]));
+
+        pendingSequence.shift();
+      });
+    </script>
+  </body>
+</html>
